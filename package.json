@@ -1,0 +1,26 @@
+{
+  "name": "core-datasets-tools",
+  "version": "1.0.0",
+  "description": "Tools for working with core datasets",
+  "main": "index.js",
+  "scripts": {
+    "start":"node index.js",
+    "check":"node lib/check.js",
+    "clone":"node lib/clone.js",
+    "push": "node lib/push.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/datahq/core-datasets-tools.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/datahq/core-datasets-tools/issues"
+  },
+  "homepage": "https://github.com/datahq/core-datasets-tools#readme",
+  "dependencies": {
+    "datahub-cli": "git+https://github.com/datahq/datahub-cli.git"
+  }
+}

@@ -1,0 +1,16 @@
+.DS_Store
+
+
+lib-cov
+*.seed
+*.log
+*.dat
+*.out
+*.pid
+*.gz
+
+node_modules/
+
+
+npm-debug.log
+package-lock.json
