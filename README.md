@@ -12,6 +12,10 @@ $ npm install
 
 ## Usage
 
+```
+node index.js [COMMAND]
+```
+
 ### Clone datasets
 
 To clone all core datasets run the following command:
