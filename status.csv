@@ -1,4 +1,4 @@
-pkg_name,github_url,run_date,validation_status,validation_message,publish_status
+name,github_url,run_date,validated,message,published
 airport-codes,https://github.com/datasets/airport-codes,,,,
 bond-yields-uk-10y,https://github.com/datasets/bond-yields-uk-10y,,,,
 bond-yields-us-10y,https://github.com/datasets/bond-yields-us-10y,,,,
@@ -23,7 +23,7 @@ gdp-us,https://github.com/datasets/gdp-us,,,,
 genome-sequencing-costs,https://github.com/datasets/genome-sequencing-costs,,,,
 geo-countries,https://github.com/datasets/geo-countries,,,,
 geo-ne-admin1-us,https://github.com/datasets/geo-ne-admin1-us,,,,
-geo-ne-admin1e,https://github.com/datasets/geo-ne-admin1e,,,,
+geo-ne-admin1,https://github.com/datasets/geo-ne-admin1,,,,
 geo-nuts-administrative-boundaries,https://github.com/datasets/geo-nuts-administrative-boundaries,,,,
 geoip2,https://github.com/datasets/geoip2,,,,
 gini-index,https://github.com/datasets/gini-index,,,,
