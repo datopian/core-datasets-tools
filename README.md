@@ -20,7 +20,7 @@ node index.js [COMMAND]
 
 To clone all core datasets run the following command:
 
-`npm clone`
+`npm index.js clone`
 
 It will clone all core datasets into following directory: `data/${pkg_name}`
 
@@ -28,7 +28,7 @@ It will clone all core datasets into following directory: `data/${pkg_name}`
 
 To check all core datasets run the following command:
 
-`npm check`
+`npm index.js check`
 
 It will validate metadata and data according to the latest spec. 
 
@@ -36,4 +36,33 @@ It will validate metadata and data according to the latest spec.
 
 To publish all core data packages run the following command:
 
-`npm push`
+`npm index.js push`
+
+## Running tests
+
+We use Ava for our tests. For running tests use:
+
+```
+$ [sudo] npm test
+```
+
+To run tests in watch mode:
+
+```
+$ [sudo] npm run watch:test
+```
+
+## Lint
+
+We use XO for checking our code for JS standard/convention/style:
+
+```bash
+# When you run tests, it first runs lint:
+$ npm test
+
+# To run lint separately:
+$ npm run lint # shows errors only
+
+# Fixing erros automatically:
+$ xo --fix
+```
