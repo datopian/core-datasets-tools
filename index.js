@@ -47,8 +47,7 @@ class CoreTools {
       }
       //  Get JS object from file content
       const descriptor = JSON.parse(content)
-      //  Descriptor.profile = 'https://schemas.frictionlessdata.io/data-package.json'
-      console.log(`checking following packages: ${statusObj.name}`)
+      console.log(`checking following package: ${statusObj.name}`)
       try {
         const result = await validate(descriptor, path.dirname(path_))
         if (result === true) {
@@ -56,7 +55,6 @@ class CoreTools {
           console.log(`valid`)
         } else {
           error(result)
-          // Const result = CSV.stringify(result)
           statusObj.validated = false
           statusObj.message = result.toString()
         }
@@ -98,7 +96,7 @@ class CoreTools {
     }
   }
 
-  //  TODO: ave pkg statuses to csv at path
+  //  TODO: save pkg statuses to csv at path
   save(path_ = 'status.csv') {
     const fields = ['name', 'github_url', 'runDate', 'validated', 'message', 'published']
     const csv = json2csv({
@@ -107,7 +105,7 @@ class CoreTools {
     })
     fs.writeFile(path_, csv, err => {
       if (err) {
-        return console.log(err)
+        console.log(err)
       }
     })
   }
