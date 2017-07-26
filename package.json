@@ -4,7 +4,23 @@
   "description": "Tools for working with core datasets",
   "main": "index.js",
   "scripts": {
-    "test": "ava -v"
+    "test": "xo --quiet && ava -v",
+    "lint": "xo --quiet"
+  },
+  "xo": {
+    "space": true,
+    "semicolon": false,
+    "rules": {
+      "no-var": "warn",
+      "no-use-before-define": 1,
+      "no-await-in-loop": 1,
+      "import/prefer-default-export": 1,
+      "no-negated-condition": 1,
+      "guard-for-in": 1
+    },
+    "ignores": [
+      "test/fixtures/*/**"
+    ]
   },
   "repository": {
     "type": "git",
@@ -22,7 +38,11 @@
     "csv-string": "^2.3.2",
     "datahub-cli": "git+https://github.com/datahq/datahub-cli.git",
     "json2csv": "^3.10.0",
+    "lodash": "^4.17.4",
     "simple-git": "^1.74.1",
     "stream-to-array": "^2.3.0"
+  },
+  "devDependencies": {
+    "xo": "^0.18.2"
   }
 }
