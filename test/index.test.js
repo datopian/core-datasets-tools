@@ -8,28 +8,16 @@ const statusCsv = path.join(__dirname, 'status-test.csv')
 test('it loads', async t => {
   const tool = await CoreTools.load(statusCsv)
   t.is(tool.statuses.length, 2)
-  const expected = {
-    github_url: "https://github.com/datasets/finance-vix",
-    local: "data/finance-vix",
-    message: "",
-    name: "finance-vix",
-    published: "",
-    run_date: "",
-    validated: ""
-	}
-  t.deepEqual(tool.statuses[0], expected)
+  t.is(tool.statuses[0].local, "data/finance-vix")
 })
 
 test('it checks', async t => {
   const tool = await CoreTools.load(statusCsv, 'test/fixtures')
-  await tool.check()
+  const path_ = 'test/status-test.csv'
+  await tool.check(path_)
   t.true(tool.statuses[0].validated)
   t.false(tool.statuses[1].validated)
   t.true(tool.statuses[1].message.includes('Invalid type: object (expected array)'))
 })
 
-// test('it clones', async t => {
-//   const tool = await CoreTools.load(statusCsv, 'test/fixtures')
-//   await tool.clone()
-//   t.true(true)
-// })
+
