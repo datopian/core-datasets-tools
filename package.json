@@ -39,7 +39,9 @@
     "datahub-cli": "git+https://github.com/datahq/datahub-cli.git",
     "json2csv": "^3.10.0",
     "lodash": "^4.17.4",
+    "nock": "^9.0.14",
     "simple-git": "^1.74.1",
+    "sinon": "^2.4.1",
     "stream-to-array": "^2.3.0"
   },
   "devDependencies": {
