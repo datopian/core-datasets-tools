@@ -1,6 +1,5 @@
 const path = require('path')
 const test = require('ava')
-const nock = require('nock')
 const sinon = require('sinon')
 const {DataHub} = require('datahub-cli/dist/utils/datahub.js')
 const {Package} = require('datahub-cli/dist/utils/data.js')
@@ -9,30 +8,7 @@ const {CoreTools} = require('../index.js')
 
 const statusCsv = path.join(__dirname, 'status-test.csv')
 
-nock('https://api-test.com')
-  .persist()
-  .get('/auth/authorize?service=rawstore')
-  .reply(200, {token: 'token'})
-  .post('/rawstore/authorize')
-  .reply(200, {
-    metadata: {
-      owner: 'test'
-    },
-    filedata: {
-      'vix-daily': {
-        length: 100,
-        md5: 'abc',
-        name: 'vix-daily'
-      },
-      datapackage: {
-        length: 100,
-        md5: 'abc',
-        name: 'datapackage'
-      }
-    }
-  })
-
-test('it loads', async t => {
+test.serial('it loads', async t => {
   const tool = await CoreTools.load(statusCsv)
   t.is(tool.statuses.length, 2)
   t.is(tool.statuses[0].local, 'data/finance-vix')
