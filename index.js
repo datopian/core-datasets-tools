@@ -79,21 +79,24 @@ class CoreTools {
     }
   }
 
-  async push() {
-    //  Instantiate DataHub class
-    const datahub = new DataHub({
-      apiUrl: config.get('api'),
-      token: config.get('token'),
-      authz: config.get('authz'),
-      owner: config.get('profile').id
-    })
+  async push(datahub, path_) {
+    const date = new Date()
     for (const statusObj of this.statuses) {
-      //  Instantiate Package class with valid packages
-      const pkg = await Package.load(statusObj.local)
+      statusObj.runDate = date.toISOString()
       //  Push to DataHub
-      await datahub.push(pkg)
-      console.log(`🙌 pushed ${statusObj.name}`)
+      if (statusObj.validated === 'true') {
+        console.log(`Pushing ${statusObj.name}`)
+        //  Instantiate Package class with valid packages
+        const pkg = await Package.load(statusObj.local)
+        await datahub.push(pkg)
+        console.log(`🙌 pushed ${statusObj.name}`)
+        statusObj.published = true
+      } else {
+        console.log(`${statusObj.name} is not pushed`)
+        statusObj.published = false
+      }
     }
+    this.save(path_)
   }
 
   //  TODO: save pkg statuses to csv at path
@@ -119,7 +122,14 @@ class CoreTools {
     await tools.clone()
     console.log('🙌 finished pulling & cloning!')
   } else if (process.argv[2] === 'push') {
-    await tools.push()
+    //  Instantiate DataHub class
+    const datahub = new DataHub({
+      apiUrl: config.get('api'),
+      token: config.get('token'),
+      authz: config.get('authz'),
+      owner: config.get('profile').id
+    })
+    await tools.push(datahub)
     console.log('🙌 finished pushing!')
   }
 })()
