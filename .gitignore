@@ -10,7 +10,7 @@ lib-cov
 *.gz
 
 node_modules/
-
+data/
 
 npm-debug.log
 package-lock.json
