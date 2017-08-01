@@ -11,7 +11,7 @@ const simpleGit = require('simple-git')
 const {DataHub} = require('datahub-cli/dist/utils/datahub.js')
 const config = require('datahub-cli/dist/utils/config')
 const {Package, Resource} = require('datahub-cli/dist/utils/data.js')
-const {validate} = require('datahub-cli/dist/validate.js')
+const {validateData, validateMetadata} = require('datahub-cli/dist/validate.js')
 const {error} = require('datahub-cli/dist/utils/error')
 
 class CoreTools {
@@ -36,7 +36,8 @@ class CoreTools {
   async check(path_) {
     const date = new Date()
     for (const statusObj of this.statuses) {
-      statusObj.runDate = date.toISOString()
+      // eslint-disable-next-line camelcase
+      statusObj.run_date = date.toISOString()
       const path_ = path.join(statusObj.local, `datapackage.json`)
       // Read given path
       let content
@@ -49,19 +50,58 @@ class CoreTools {
       const descriptor = JSON.parse(content)
       console.log(`checking following package: ${statusObj.name}`)
       try {
-        const result = await validate(descriptor, path.dirname(path_))
-        if (result === true) {
-          statusObj.validated = true
-          console.log(`valid`)
+        // Validate Metadata
+        const resultMetadata = await validateMetadata(descriptor)
+        if (resultMetadata === true) {
+          // eslint-disable-next-line camelcase
+          statusObj.validated_metadata = true
+          try {
+            // Validate Data only if metadata is valid
+            for (let i = 0; i < descriptor.resources.length; i++) {
+              const resource = Resource.load(descriptor.resources[i], path.dirname(path_))
+              const resourcePath = path.join(path.dirname(path_), resource.path)
+              if (resource.descriptor.format === 'csv') {
+                const result = await validateData(resource.descriptor.schema, resourcePath)
+                if (result === true) {
+                  // eslint-disable-next-line camelcase
+                  statusObj.validated_data = true
+                  console.log(`valid`)
+                } else {
+                  error(result)
+                  // eslint-disable-next-line camelcase
+                  statusObj.validated_data = false
+                  // eslint-disable-next-line camelcase
+                  statusObj.validated_data_message = result.toString()
+                }
+              } else {
+                // eslint-disable-next-line camelcase
+                statusObj.validated_data = true
+              }
+            }
+          } catch (err) {
+            error(err[0].message)
+            // eslint-disable-next-line camelcase
+            statusObj.validated_data = false
+            // eslint-disable-next-line camelcase
+            statusObj.validated_data_message = err[0].message
+          }
         } else {
-          error(result)
-          statusObj.validated = false
-          statusObj.message = result.toString()
+          error(resultMetadata)
+          // eslint-disable-next-line camelcase
+          statusObj.validated_data = false
+          // eslint-disable-next-line camelcase
+          statusObj.validated_metadata = false
+          // eslint-disable-next-line camelcase
+          statusObj.validated_metadata_message = resultMetadata.toString()
         }
       } catch (err) {
-        error(err.message)
-        statusObj.validated = false
-        statusObj.message = err.message
+        error(err[0].message)
+        // eslint-disable-next-line camelcase
+        statusObj.validated_data = false
+        // eslint-disable-next-line camelcase
+        statusObj.validated_metadata = false
+        // eslint-disable-next-line camelcase
+        statusObj.validated_metadata_message = err[0].message
       }
     }
     this.save(path_)
@@ -82,9 +122,10 @@ class CoreTools {
   async push(datahub, path_) {
     const date = new Date()
     for (const statusObj of this.statuses) {
-      statusObj.runDate = date.toISOString()
+      // eslint-disable-next-line camelcase
+      statusObj.run_date = date.toISOString()
       //  Push to DataHub
-      if (statusObj.validated === 'true') {
+      if (statusObj.validated_metadata === 'true' && statusObj.validated_data === 'true') {
         console.log(`Pushing ${statusObj.name}`)
         //  Instantiate Package class with valid packages
         const pkg = await Package.load(statusObj.local)
@@ -101,7 +142,7 @@ class CoreTools {
 
   //  TODO: save pkg statuses to csv at path
   save(path_ = 'status.csv') {
-    const fields = ['name', 'github_url', 'runDate', 'validated', 'message', 'published']
+    const fields = ['name', 'github_url', 'run_date', 'validated_metadata', 'validated_data', 'published', 'ok_on_datahub', 'validated_metadata_message', 'validated_data_message']
     const csv = json2csv({
       data: this.statuses,
       fields
