@@ -88,7 +88,7 @@ class CoreTools {
         } else {
           error(resultMetadata)
           // eslint-disable-next-line camelcase
-          statusObj.validated_data = false
+          statusObj.validated_data = 'N/A'
           // eslint-disable-next-line camelcase
           statusObj.validated_metadata = false
           // eslint-disable-next-line camelcase
@@ -97,7 +97,7 @@ class CoreTools {
       } catch (err) {
         error(err[0].message)
         // eslint-disable-next-line camelcase
-        statusObj.validated_data = false
+        statusObj.validated_data = 'N/A'
         // eslint-disable-next-line camelcase
         statusObj.validated_metadata = false
         // eslint-disable-next-line camelcase
