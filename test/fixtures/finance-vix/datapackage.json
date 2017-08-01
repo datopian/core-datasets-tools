@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "license": "PDDL-1.0",
   "sources": [{
+    "title": "CBOE VIX Page",
     "name": "CBOE VIX Page",
     "web": "http://www.cboe.com/micro/vix/historical.aspx"
   }],

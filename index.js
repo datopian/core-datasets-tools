@@ -131,10 +131,10 @@ class CoreTools {
         const pkg = await Package.load(statusObj.local)
         await datahub.push(pkg)
         console.log(`🙌 pushed ${statusObj.name}`)
-        statusObj.published = true
+        statusObj.published = path.join('https://testing.datahub.io', 'core', statusObj.name)
       } else {
         console.log(`${statusObj.name} is not pushed`)
-        statusObj.published = false
+        statusObj.published = '-'
       }
     }
     this.save(path_)
