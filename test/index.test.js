@@ -21,7 +21,7 @@ test.serial('it checks', async t => {
   await tool.check(path_)
   t.true(tool.statuses[0].validated_metadata)
   t.true(tool.statuses[0].validated_data)
-  t.false(tool.statuses[1].validated_data)
+  t.true(tool.statuses[1].validated_data.includes('N/A'))
   t.false(tool.statuses[1].validated_metadata)
   t.true(tool.statuses[1].validated_metadata_message.includes('Invalid type: object (expected array)'))
 })
@@ -37,7 +37,8 @@ test.serial('it publishes', async t => {
   tool.save = sinon.spy()
   const path_ = 'test/status-test.csv'
   await tool.push(datahub, path_)
-  t.true(tool.statuses[0].published)
+  t.true(tool.statuses[0].published.includes('https:/testing.datahub.io/core/finance-vix'))
+  t.true(tool.statuses[1].published.includes('-'))
   t.true(datahub.push.calledOnce)
   t.true(datahub.push.firstCall.args[0] instanceof Package)
 })
