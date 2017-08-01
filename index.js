@@ -36,7 +36,8 @@ class CoreTools {
   async check(path_) {
     const date = new Date()
     for (const statusObj of this.statuses) {
-      statusObj.runDate = date.toISOString()
+      // eslint-disable-next-line camelcase
+      statusObj.run_date = date.toISOString()
       const path_ = path.join(statusObj.local, `datapackage.json`)
       // Read given path
       let content
@@ -51,45 +52,56 @@ class CoreTools {
       try {
         // Validate Metadata
         const resultMetadata = await validateMetadata(descriptor)
-        if(resultMetadata === true){
+        if (resultMetadata === true) {
+          // eslint-disable-next-line camelcase
           statusObj.validated_metadata = true
           try {
             // Validate Data only if metadata is valid
             for (let i = 0; i < descriptor.resources.length; i++) {
               const resource = Resource.load(descriptor.resources[i], path.dirname(path_))
-              const resourcePath = path.join(path.dirname(path_),resource.path)
+              const resourcePath = path.join(path.dirname(path_), resource.path)
               if (resource.descriptor.format === 'csv') {
                 const result = await validateData(resource.descriptor.schema, resourcePath)
                 if (result === true) {
+                  // eslint-disable-next-line camelcase
                   statusObj.validated_data = true
                   console.log(`valid`)
                 } else {
                   error(result)
+                  // eslint-disable-next-line camelcase
                   statusObj.validated_data = false
+                  // eslint-disable-next-line camelcase
                   statusObj.validated_data_message = result.toString()
                 }
-              }
-              else{
-              statusObj.validated_data = true
+              } else {
+                // eslint-disable-next-line camelcase
+                statusObj.validated_data = true
               }
             }
           } catch (err) {
             error(err[0].message)
+            // eslint-disable-next-line camelcase
             statusObj.validated_data = false
+            // eslint-disable-next-line camelcase
             statusObj.validated_data_message = err[0].message
           }
         } else {
           error(resultMetadata)
+          // eslint-disable-next-line camelcase
           statusObj.validated_data = false
+          // eslint-disable-next-line camelcase
           statusObj.validated_metadata = false
+          // eslint-disable-next-line camelcase
           statusObj.validated_metadata_message = resultMetadata.toString()
         }
-      }
-      catch (err) {
-      error(err[0].message)
-      statusObj.validated_data = false
-      statusObj.validated_metadata = false
-      statusObj.validated_metadata_message = err[0].message
+      } catch (err) {
+        error(err[0].message)
+        // eslint-disable-next-line camelcase
+        statusObj.validated_data = false
+        // eslint-disable-next-line camelcase
+        statusObj.validated_metadata = false
+        // eslint-disable-next-line camelcase
+        statusObj.validated_metadata_message = err[0].message
       }
     }
     this.save(path_)
@@ -110,7 +122,8 @@ class CoreTools {
   async push(datahub, path_) {
     const date = new Date()
     for (const statusObj of this.statuses) {
-      statusObj.runDate = date.toISOString()
+      // eslint-disable-next-line camelcase
+      statusObj.run_date = date.toISOString()
       //  Push to DataHub
       if (statusObj.validated_metadata === 'true' && statusObj.validated_data === 'true') {
         console.log(`Pushing ${statusObj.name}`)
@@ -129,7 +142,7 @@ class CoreTools {
 
   //  TODO: save pkg statuses to csv at path
   save(path_ = 'status.csv') {
-    const fields = ['name', 'github_url', 'runDate', 'validated_metadata','validated_data','published','ok_on_datahub','validated_metadata_message','validated_data_message']
+    const fields = ['name', 'github_url', 'run_date', 'validated_metadata', 'validated_data', 'published', 'ok_on_datahub', 'validated_metadata_message', 'validated_data_message']
     const csv = json2csv({
       data: this.statuses,
       fields
