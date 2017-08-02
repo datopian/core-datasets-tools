@@ -16,6 +16,14 @@ $ npm install
 node index.js [COMMAND]
 ```
 
+### Normalize datasets
+
+To normalize all core datasets run the following command:
+
+`npm index.js norm`
+
+It will normalize all core datasets into following directory: `data/${pkg_name}`
+
 ### Clone datasets
 
 To clone all core datasets run the following command:
