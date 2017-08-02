@@ -13,6 +13,7 @@ const config = require('datahub-cli/dist/utils/config')
 const {Package, Resource} = require('datahub-cli/dist/utils/data.js')
 const {validateData, validateMetadata} = require('datahub-cli/dist/validate.js')
 const {error} = require('datahub-cli/dist/utils/error')
+const {normalize} = require('datahub-cli/dist/normalize.js')
 
 class CoreTools {
   constructor(rows, pathToPackagesDirectory) {
@@ -55,6 +56,8 @@ class CoreTools {
         if (resultMetadata === true) {
           // eslint-disable-next-line camelcase
           statusObj.validated_metadata = true
+          // eslint-disable-next-line camelcase
+          statusObj.validated_metadata_message = ''
           try {
             // Validate Data only if metadata is valid
             for (let i = 0; i < descriptor.resources.length; i++) {
@@ -65,6 +68,8 @@ class CoreTools {
                 if (result === true) {
                   // eslint-disable-next-line camelcase
                   statusObj.validated_data = true
+                  // eslint-disable-next-line camelcase
+                  statusObj.validated_data_message = ''
                   console.log(`valid`)
                 } else {
                   error(result)
@@ -105,6 +110,14 @@ class CoreTools {
       }
     }
     this.save(path_)
+  }
+
+  norm() {
+    for (const statusObj of this.statuses) {
+      console.log(`Going to normalize ${statusObj.local}`)
+      normalize(statusObj.local)
+      console.log('Finished')
+    }
   }
 
   async clone() {
@@ -172,6 +185,8 @@ class CoreTools {
     })
     await tools.push(datahub)
     console.log('🙌 finished pushing!')
+  } else if (process.argv[2] === 'norm') {
+    tools.norm()
   }
 })()
 
