@@ -57,7 +57,7 @@ class CoreTools {
           // eslint-disable-next-line camelcase
           statusObj.validated_metadata = true
           // eslint-disable-next-line camelcase
-          statusObj.validated_metadata_message = ''
+          statusObj.validated_metadata_message = 'valid'
           try {
             // Validate Data only if metadata is valid
             for (let i = 0; i < descriptor.resources.length; i++) {
@@ -69,7 +69,7 @@ class CoreTools {
                   // eslint-disable-next-line camelcase
                   statusObj.validated_data = true
                   // eslint-disable-next-line camelcase
-                  statusObj.validated_data_message = ''
+                  statusObj.validated_data_message = 'valid'
                   console.log(`valid`)
                 } else {
                   error(result)
@@ -77,10 +77,14 @@ class CoreTools {
                   statusObj.validated_data = false
                   // eslint-disable-next-line camelcase
                   statusObj.validated_data_message = result.toString()
+                  // eslint-disable-next-line camelcase
+                  statusObj.published = '-'
                 }
               } else {
                 // eslint-disable-next-line camelcase
                 statusObj.validated_data = true
+                // eslint-disable-next-line camelcase
+                statusObj.validated_data_message = 'valid'
               }
             }
           } catch (err) {
@@ -89,13 +93,19 @@ class CoreTools {
             statusObj.validated_data = false
             // eslint-disable-next-line camelcase
             statusObj.validated_data_message = err[0].message
+            // eslint-disable-next-line camelcase
+            statusObj.published = '-'
           }
         } else {
           error(resultMetadata)
           // eslint-disable-next-line camelcase
           statusObj.validated_data = 'N/A'
           // eslint-disable-next-line camelcase
+          statusObj.validated_data_message = 'N/A'
+          // eslint-disable-next-line camelcase
           statusObj.validated_metadata = false
+          // eslint-disable-next-line camelcase
+          statusObj.published = '-'
           // eslint-disable-next-line camelcase
           statusObj.validated_metadata_message = resultMetadata.toString()
         }
@@ -104,9 +114,13 @@ class CoreTools {
         // eslint-disable-next-line camelcase
         statusObj.validated_data = 'N/A'
         // eslint-disable-next-line camelcase
+        statusObj.validated_data_message = 'N/A'
+        // eslint-disable-next-line camelcase
         statusObj.validated_metadata = false
         // eslint-disable-next-line camelcase
         statusObj.validated_metadata_message = err[0].message
+        // eslint-disable-next-line camelcase
+        statusObj.published = '-'
       }
     }
     this.save(path_)
@@ -139,12 +153,14 @@ class CoreTools {
       statusObj.run_date = date.toISOString()
       //  Push to DataHub
       if (statusObj.validated_metadata === 'true' && statusObj.validated_data === 'true') {
-        console.log(`Pushing ${statusObj.name}`)
-        //  Instantiate Package class with valid packages
-        const pkg = await Package.load(statusObj.local)
-        await datahub.push(pkg)
-        console.log(`🙌 pushed ${statusObj.name}`)
-        statusObj.published = path.join('https://testing.datahub.io', 'core', statusObj.name)
+        if (statusObj.published === '-') {
+          console.log(`Pushing ${statusObj.name}`)
+          //  Instantiate Package class with valid packages
+          const pkg = await Package.load(statusObj.local)
+          await datahub.push(pkg)
+          console.log(`🙌 pushed ${statusObj.name}`)
+          statusObj.published = path.join('https://testing.datahub.io', 'core', statusObj.name)
+        }
       } else {
         console.log(`${statusObj.name} is not pushed`)
         statusObj.published = '-'
