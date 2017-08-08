@@ -157,7 +157,6 @@ class CoreTools {
           console.log(`Pushing ${statusObj.name}`)
           //  Instantiate Package class with valid packages
           const pkg = await Package.load(statusObj.local)
-          console.log(pkg)
           await datahub.push(pkg)
           console.log(`🙌 pushed ${statusObj.name}`)
           statusObj.published = path.join('https://testing.datahub.io', 'core', statusObj.name)
