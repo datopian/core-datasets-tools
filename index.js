@@ -157,6 +157,7 @@ class CoreTools {
           console.log(`Pushing ${statusObj.name}`)
           //  Instantiate Package class with valid packages
           const pkg = await Package.load(statusObj.local)
+          console.log(pkg)
           await datahub.push(pkg)
           console.log(`🙌 pushed ${statusObj.name}`)
           statusObj.published = path.join('https://testing.datahub.io', 'core', statusObj.name)
@@ -197,7 +198,8 @@ class CoreTools {
       apiUrl: config.get('api'),
       token: config.get('token'),
       authz: config.get('authz'),
-      owner: config.get('profile').id
+      owner: config.get('profile').username,
+      ownerid: config.get('profile').id
     })
     await tools.push(datahub)
     console.log('🙌 finished pushing!')
