@@ -1,8 +1,8 @@
 const path = require('path')
 const test = require('ava')
 const sinon = require('sinon')
-const {DataHub} = require('datahub-cli/dist/utils/datahub.js')
-const {Package} = require('datahub-cli/dist/utils/data.js')
+const {DataHub} = require('datahub-cli/lib/utils/datahub.js')
+const {Dataset} = require('data.js')
 
 const {CoreTools} = require('../index.js')
 
@@ -43,6 +43,6 @@ test.serial('it publishes', async t => {
   t.true(tool.statuses[0].published.includes('https:/testing.datahub.io/core/finance-vix'))
   t.true(tool.statuses[1].published.includes('-'))
   t.true(datahub.push.calledOnce)
-  t.true(datahub.push.firstCall.args[0] instanceof Package)
+  t.true(datahub.push.firstCall.args[0] instanceof Dataset)
 })
 

@@ -7,17 +7,18 @@ const json2csv = require('json2csv')
 const lodash = require('lodash')
 const toArray = require('stream-to-array')
 const simpleGit = require('simple-git')
+const data = require('data.js')
 
-const {DataHub} = require('datahub-cli/dist/utils/datahub.js')
-const config = require('datahub-cli/dist/utils/config')
-const {Package, Resource} = require('datahub-cli/dist/utils/data.js')
-const {validateData, validateMetadata} = require('datahub-cli/dist/validate.js')
-const {error} = require('datahub-cli/dist/utils/error')
-const {normalize} = require('datahub-cli/dist/normalize.js')
+const {DataHub} = require('datahub-cli/lib/utils/datahub.js')
+const config = require('datahub-cli/lib/utils/config')
+
+const {validateData, validateMetadata} = require('datahub-cli/lib/validate.js')
+const {error} = require('datahub-cli/lib/utils/error')
+const {normalize} = require('datahub-cli/lib/normalize.js')
 
 class CoreTools {
   constructor(rows, pathToPackagesDirectory) {
-    // TODO: Resource.rows should do this for us ...
+    // TODO: File.rows should do this for us ...
     this.headers = rows.shift()
     this.statuses = rows.map(row => {
       return lodash.zipObject(this.headers, row)
@@ -28,7 +29,7 @@ class CoreTools {
   }
 
   static async load(statusCsvPath, pathToPackagesDirectory = 'data') {
-    const res = Resource.load(statusCsvPath)
+    const res = data.File.load(statusCsvPath)
     let rows = await res.rows()
     rows = await toArray(rows)
     return new CoreTools(rows, pathToPackagesDirectory)
@@ -61,7 +62,7 @@ class CoreTools {
           try {
             // Validate Data only if metadata is valid
             for (let i = 0; i < descriptor.resources.length; i++) {
-              const resource = Resource.load(descriptor.resources[i], path.dirname(path_))
+              const resource = data.File.load(descriptor.resources[i], path.dirname(path_))
               const resourcePath = path.join(path.dirname(path_), resource.path)
               if (resource.descriptor.format === 'csv') {
                 const result = await validateData(resource.descriptor.schema, resourcePath)
@@ -155,8 +156,8 @@ class CoreTools {
       if (statusObj.validated_metadata === 'true' && statusObj.validated_data === 'true') {
         if (statusObj.published === '-') {
           console.log(`Pushing ${statusObj.name}`)
-          //  Instantiate Package class with valid packages
-          const pkg = await Package.load(statusObj.local)
+          //  Instantiate Dataset class with valid packages
+          const pkg = await data.Dataset.load(statusObj.local)
           await datahub.push(pkg)
           console.log(`🙌 pushed ${statusObj.name}`)
           statusObj.published = path.join('https://testing.datahub.io', 'core', statusObj.name)
