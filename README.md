@@ -1,3 +1,4 @@
+# Depreciated - moved https://github.com/datasets/registry
 DataHub tools for core datasets
 
 [![Issues](https://img.shields.io/badge/issue-tracker-orange.svg)](https://github.com/datahq/core-datasets-tools/issues)
